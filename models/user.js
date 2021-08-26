@@ -1,25 +1,25 @@
 const mongoose=require('mongoose');
 const joi=require('joi');
 const bcrypt=require('bcrypt');
-const appschema=mongoose.Schema({
-    appname:{
-        type:String,
-    },
-    usage_time:{
-        type:Number,
-    }
-})
+// const appschema=mongoose.Schema({
+//     appname:{
+//         type:String,
+//     },
+//     usage_time:{
+//         type:Number,
+//     }
+// })
+//
+// const appusagelistschema=mongoose.Schema({
+//     usage_date:{
+//         type:Date,
+//     },
+//     usages:{
+//        type:[appschema],
+//     }
+//
+// })
 
-const appusagelistschema=mongoose.Schema({
-    usage_date:{
-        type:Date,
-    },
-    usages:{
-       type:[appschema],
-    }
-
-})
-const appusagelist=mongoose.model('User',userschema);
 const userschema=mongoose.Schema({
     parentalacess:{
         type:Boolean,
@@ -40,19 +40,10 @@ const userschema=mongoose.Schema({
         minLength: 6,
         maxLength: 300
     },
-    usage:[{
-        usage_date:{
-            type:Date,
-        },
-        usages:[{
-            appname:{
-                type:String,
-            },
-            usage_time:{
-                type:Number,
-            },
-        }]
-    }],
+    usage:{
+        type:Array,
+        default:[],
+    },
 });
 const User=mongoose.model('User',userschema);
 function validateuser(user){
@@ -83,3 +74,16 @@ async function hash(value){
 exports.User=User;
 exports.validateuser=validateuser;
 exports.hash=hash;
+// [{
+//     usage_date:{
+//         type:Date,
+//     },
+//     usages:[{
+//         appname:{
+//             type:String,
+//         },
+//         usage_time:{
+//             type:Number,
+//         },
+//     }]
+// }]
