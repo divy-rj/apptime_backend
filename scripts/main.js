@@ -6,7 +6,7 @@ const express=require('express');
 const {User,validateuser,hash}=require('../models/user');
 var app=express();
 app.use(express.json());
-const uri = "mongodb+srv://apptime_admin:123456789.apptime@apptime.riki1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority/users";
+const uri = "mongodb+srv://apptime_admin:123456789.apptime@apptime.riki1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const joi=require('joi');
 mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
@@ -20,11 +20,11 @@ async function Resisteruser(user){
     console.log("registering");
     try {
         const u=await user.save();
-        console.log("loh");
+        console.log("loh + "+u);
         return u;
     }
     catch (err){
-        console.log(err.message);
+        console.log(err.message+"saving error");
 
     }
 }
