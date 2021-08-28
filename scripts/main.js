@@ -34,7 +34,23 @@ async function user_autentication(email,password){
     try {
         const user=await User.find({email:email,password:password});
         if(user)
-        {   console.log("Useeer" + user);
+        {  // console.log(user+"hii");
+            return user;
+        }
+        else
+        {
+            return new Error().message("Authentication failed");
+        }
+    }
+    catch (err){
+        console.log(err.message+"error");
+
+    }
+}
+async function  user_authentication_id(id){
+    try{
+        let user=User.find({_id:id});
+        if(user){
             return user;
         }
         else
@@ -51,7 +67,7 @@ app.post('/user/authentication',(req,res)=>{
     hash(req.body.password).then(password=>{
         user_autentication(req.body.email,password).then(user=>{
             res.status(200).send(user);
-            console.log(user+"user")
+            console.log(user+"useriii")
         }).catch(err=>{
             res.status(400).send(err.message+"400");
             console.log(err.message+"400")
@@ -61,7 +77,15 @@ app.post('/user/authentication',(req,res)=>{
         })
     })
 })
-
+app.post('/user/authid',(req , res)=>{
+    user_authentication_id(req.body.id).then(user=>{
+        res.status(200).send(user);
+        console.log(user+"useriii")
+    }).catch(err=>{
+        res.status(400).send(err.message+"400");
+        console.log(err.message+"400")
+    })
+})
 
 app.post('/user/register',(req,res)=>{
     const us={
@@ -81,7 +105,7 @@ app.post('/user/register',(req,res)=>{
                 password:has
             })
             Resisteruser(user).then(ussr=>{
-                res.status(200).send("hello");
+                res.status(200).send("hello"+ussr._id);
                 console.log("user saved hello");
             }).catch((err)=>{
                 res.status(400).send(err.message);
@@ -99,35 +123,6 @@ app.post('/user/register',(req,res)=>{
 })
 
 
-app.get('/year/:year',(req,res)=>{
-    getmoviesbyyear(parseInt(req.params.year)).then(m=>{
-        if(m.length>0){
-            res.send(m);
-            console.log('data sent sucessfully !');
-        }
-        else
-        {
-            res.status(404).send('not found');
-            console.log('data not found');
-        }
-    });
-
-});
-
-app.post('/setmovie',(req,res)=>{
-    const movie=new Movie({
-        name:req.body.name,
-        year:req.body.year,
-        director:req.body.director
-    });
-    setmovies(movie).then(m1=>{
-        res.send(m1);
-        console.log('data saved sucessfully !');
-    }).catch((err)=>{
-        res.status(400).send(err.message);
-        console.log(err.message);
-    })
-});
 const port=3010;
 app.listen(port,()=>{
     console.log(`listening at ${port}`);

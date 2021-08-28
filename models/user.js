@@ -57,13 +57,13 @@ function validateuser(user){
     //  console.log(c);
     return schema.validate(user);
 }
-let salt;
+const salt="$2b$10$hnuOCv0tfrWZiyagqe3SH.";
 async function hash(value){
     console.log("hashing now");
-    if(!salt)
-        salt=await bcrypt.genSalt(10);
+
+
     const hashed=await bcrypt.hash(value,salt);
-    console.log(hashed);
+   // console.log(hashed);
     if(hashed)
         return hashed;
     else
