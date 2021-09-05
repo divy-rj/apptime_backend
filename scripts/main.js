@@ -8,6 +8,7 @@ var app=express();
 app.use(express.json());
 const uri = "mongodb+srv://apptime_admin:123456789.apptime@apptime.riki1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const joi=require('joi');
+const {ObjectId} = require("mongodb");
 mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
         console.log("connected to db");
@@ -56,8 +57,8 @@ app.post('/user/authentication',(req,res)=>{
             res.status(400).send(err.message+"400");
             console.log(err.message+"400")
         }).catch(err=>{
-            res.status(200).send(err.message+"200");
-            console.log(err.message+"200")
+            res.status(400).send(err.message+"400");
+            console.log(err.message+"400")
         })
     })
 })
@@ -97,8 +98,31 @@ app.post('/user/register',(req,res)=>{
         res.status(400).send(vr.error );
     }
 })
+app.patch('/user/update',(req,res)=>{
+    hash(req.body.password).then(password=>{
+        User.findOneAndUpdate({'email':req.body.old_email},{
+       'email':req.body.email,
+       'password':password,
+       'name':req.body.name
+    }).then(user=>{
+        res.status(200).send(user)
+        }).catch(err=>{
+            res.status(400).send(err.message+"400");
+            console.log(err.message+"400")
+        })
+    }).catch(err=>{
+        res.status(400).send(err.message+"400");
+        console.log(err.message+"400")
+    })
+})
+app.delete('/user/delete',(req,res)=>{
+    User.findOneAndRemove({'email':req.body.email}).then(()=>{
+        res.status(200).send("Deleted")
+        console.log("Deleted")
+    }
+    )
 
-
+})
 app.get('/year/:year',(req,res)=>{
     getmoviesbyyear(parseInt(req.params.year)).then(m=>{
         if(m.length>0){

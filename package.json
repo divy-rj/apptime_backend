@@ -15,5 +15,8 @@
     "joi": "^17.4.2",
     "mongoose": "^6.0.0",
     "nodemon": "^2.0.12"
+  },
+  "devDependencies": {
+    "mongodb": "^4.1.1"
   }
 }
