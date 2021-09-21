@@ -8,6 +8,8 @@ var app=express();
 app.use(express.json());
 const uri = "mongodb+srv://apptime_admin:123456789.apptime@apptime.riki1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const joi=require('joi');
+const auth=require('../auth/auth');
+const jwt=require('jsonwebtoken');
 const {ObjectId} = require("mongodb");
 mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
@@ -33,7 +35,7 @@ async function Resisteruser(user){
 async function user_autentication(email,password){
 
     try {
-        const user=await User.find({email:email,password:password});
+        const user=await User.findOne({email:email,password:password});
         if(user)
         {   console.log("Useeer" + user);
             return user;
@@ -50,9 +52,10 @@ async function user_autentication(email,password){
 }
 app.post('/user/authentication',(req,res)=>{
     hash(req.body.password).then(password=>{
-        user_autentication(req.body.email,password).then(user=>{
-            res.status(200).send(user);
-            console.log(user+"user")
+        user_autentication(req.body.email,password).then(ussr=>{
+            const token=   jwt.sign({_id:ussr._id,parentalacess:ussr.parentalacess,email:ussr.email},'Apptime');//temporary use...will be env
+            res.status(200).send(token);
+            console.log("user saved hello");
         }).catch(err=>{
             res.status(400).send(err.message+"400");
             console.log(err.message+"400")
@@ -82,7 +85,8 @@ app.post('/user/register',(req,res)=>{
                 password:has
             })
             Resisteruser(user).then(ussr=>{
-                res.status(200).send(user._id);
+                const token=   jwt.sign({_id:ussr._id,parentalacess:ussr.parentalacess,email:ussr.email},'Apptime');//temporary use...will be env
+                res.status(200).send(token);
                 console.log("user saved hello");
             }).catch((err)=>{
                 res.status(400).send(err.message);
@@ -123,35 +127,7 @@ app.delete('/user/delete',(req,res)=>{
     )
 
 })
-app.get('/year/:year',(req,res)=>{
-    getmoviesbyyear(parseInt(req.params.year)).then(m=>{
-        if(m.length>0){
-            res.send(m);
-            console.log('data sent sucessfully !');
-        }
-        else
-        {
-            res.status(404).send('not found');
-            console.log('data not found');
-        }
-    });
 
-});
-
-app.post('/setmovie',(req,res)=>{
-    const movie=new Movie({
-        name:req.body.name,
-        year:req.body.year,
-        director:req.body.director
-    });
-    setmovies(movie).then(m1=>{
-        res.send(m1);
-        console.log('data saved sucessfully !');
-    }).catch((err)=>{
-        res.status(400).send(err.message);
-        console.log(err.message);
-    })
-});
 const port=3010;
 app.listen(port,()=>{
     console.log(`listening at ${port}`);
