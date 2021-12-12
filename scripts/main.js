@@ -50,9 +50,9 @@ async function user_autentication(email,password){
 
     }
 }
-app.post('/insert',auth,(req,res)=>{
-p
-})
+// app.post('/insert',auth,(req,res)=>{
+// p
+// })
 app.post('/user/authentication',(req,res)=>{
     hash(req.body.password).then(password=>{
         user_autentication(req.body.email,password).then(ussr=>{
@@ -131,8 +131,6 @@ app.delete('/user/delete',(req,res)=>{
 
 })
 
-const port=3010;
-app.listen(port,()=>{
-    console.log(`listening at ${port}`);
-})
-
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
