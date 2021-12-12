@@ -45,6 +45,7 @@ const userschema=mongoose.Schema({
         default:[],
     },
 });
+
 const User=mongoose.model('User',userschema);
 function validateuser(user){
     console.log("validating");
@@ -63,7 +64,7 @@ async function hash(value){
 
 
     const hashed=await bcrypt.hash(value,salt);
-   // console.log(hashed);
+
     if(hashed)
         return hashed;
     else
@@ -74,16 +75,3 @@ async function hash(value){
 exports.User=User;
 exports.validateuser=validateuser;
 exports.hash=hash;
-// [{
-//     usage_date:{
-//         type:Date,
-//     },
-//     usages:[{
-//         appname:{
-//             type:String,
-//         },
-//         usage_time:{
-//             type:Number,
-//         },
-//     }]
-// }]

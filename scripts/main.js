@@ -50,6 +50,9 @@ async function user_autentication(email,password){
 
     }
 }
+app.post('/insert',auth,(req,res)=>{
+p
+})
 app.post('/user/authentication',(req,res)=>{
     hash(req.body.password).then(password=>{
         user_autentication(req.body.email,password).then(ussr=>{
