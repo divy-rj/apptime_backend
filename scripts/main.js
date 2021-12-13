@@ -71,6 +71,7 @@ app.post('/user/authentication',(req,res)=>{
 
 
 app.post('/user/register',(req,res)=>{
+    console.log("register");
     const us={
         email:req.body.email,
         name:req.body.name,
